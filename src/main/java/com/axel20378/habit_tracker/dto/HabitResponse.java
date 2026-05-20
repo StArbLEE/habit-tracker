@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
@@ -14,5 +14,5 @@ public class HabitResponse {
     private String name;
     private String description;
     private int target;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }

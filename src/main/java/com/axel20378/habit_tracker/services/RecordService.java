@@ -1,32 +1,43 @@
 package com.axel20378.habit_tracker.services;
 
+import com.axel20378.habit_tracker.dto.HabitRequest;
+import com.axel20378.habit_tracker.dto.HabitResponse;
 import com.axel20378.habit_tracker.dto.RecordResponse;
+import com.axel20378.habit_tracker.entity.Habit;
+import com.axel20378.habit_tracker.exceptions.HabitNotFoundException;
+import com.axel20378.habit_tracker.repository.HabitRepository;
+import com.axel20378.habit_tracker.repository.RecordRepository;
 import org.springframework.stereotype.Service;
-import com.axel20378.habit_tracker.models.Record;
-import com.axel20378.habit_tracker.models.Habit;
+import com.axel20378.habit_tracker.entity.Record;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RecordService {
-    private Long nextId = 1L;
-    private final Map<Long, Record> records = new HashMap<>();
-    private final HabitService habitService;
-    public RecordService(HabitService habitService){this.habitService = habitService;};
 
-    public RecordResponse create(Long habitId) {
-        habitService.getById(habitId); // проверяем что привычка существует
-        Record record = new Record(nextId++, habitId, LocalDate.now()); // создаем запись
-        records.put(record.getId(), record); // кладем в мап
-        return toResponse(record); // конвертируем и возвращаем
+    private final RecordRepository recordRepository; // репозиторий для записей
+    private final HabitRepository habitRepository;   // репозиторий для привычек
+
+    public RecordService(RecordRepository recordRepository, HabitRepository habitRepository) {
+        this.recordRepository = recordRepository;
+        this.habitRepository = habitRepository;
     }
 
-    private RecordResponse toResponse(Record record) {
+    public RecordResponse create(Long habitId) {
+        // ищем привычку в БД — если не найдена бросит HabitNotFoundException
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new HabitNotFoundException(habitId));
+        Record record = new Record(); // создаем новую запись
+        record.setHabit(habit);       // привязываем привычку
+        record.setDate(LocalDate.now()); // ставим текущую дату
+        Record saved = recordRepository.save(record); // сохраняем в БД
+        return toResponse(saved); // конвертируем и возвращаем
+    }
+
+    private RecordResponse toResponse(Record record) { // конвертация Record в RecordResponse
         return new RecordResponse(
                 record.getId(),
-                record.getHabitId(),
+                record.getHabit().getId(), // достаем id из объекта Habit
                 record.getDate()
         );
     }

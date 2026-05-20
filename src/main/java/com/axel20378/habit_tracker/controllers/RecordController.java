@@ -1,6 +1,5 @@
 package com.axel20378.habit_tracker.controllers;
 
-
 import com.axel20378.habit_tracker.dto.RecordResponse;
 import com.axel20378.habit_tracker.services.RecordService;
 import jakarta.validation.Valid;

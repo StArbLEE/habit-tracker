@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Data
 @AllArgsConstructor
 public class HabitRequest {
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Требуется имя")
     private String name;
 
     private String description;
 
-    @Positive(message = "Target must be a positive number")
+    @Positive(message = "значение должно быть положительным числом.")
     private int target;
 }

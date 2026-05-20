@@ -1,5 +1,6 @@
 package com.axel20378.habit_tracker.dto;
 
+import com.axel20378.habit_tracker.entity.Habit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
