@@ -4,15 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class HabitResponse {
+public class HabitDailyListResponse {
     private Long id;
     private String name;
-    private String description;
-    private int target;
-    private LocalDateTime createdAt;
+    private boolean completed;
 }

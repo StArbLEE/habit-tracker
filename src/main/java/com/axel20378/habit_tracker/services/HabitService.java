@@ -5,14 +5,13 @@ import com.axel20378.habit_tracker.dto.HabitResponse;
 import com.axel20378.habit_tracker.exceptions.HabitNotFoundException;
 import com.axel20378.habit_tracker.entity.Habit;
 import com.axel20378.habit_tracker.repository.HabitRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -25,13 +24,14 @@ public class HabitService {
         this.habitRepository = habitRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<HabitResponse> getAll() {
         List<HabitResponse> result = new ArrayList<>();
         result = habitRepository.findAll().stream().map(this::toResponse).toList();
         log.info("Получение всех привычек, количество: {}", result.size());
         return result;
     }
-
+    @Transactional(readOnly = true)
     public HabitResponse getById(Long id) { // создаем функцию для получения по id
         try {
             Habit habit = habitRepository.findById(id).orElseThrow(() -> new HabitNotFoundException(id)); // ищем привычку по ключу в мапе
@@ -42,7 +42,7 @@ public class HabitService {
             throw e; // пробрасываем исключение дальше чтобы GlobalExceptionHandler поймал
         }
     }
-
+    @Transactional
     public HabitResponse create(HabitRequest request) {
         Habit habit = new Habit();
         habit.setName(request.getName());
@@ -54,6 +54,7 @@ public class HabitService {
         return toResponse(saved); // конвертируем и возвращаем
     }
 
+    @Transactional
     public HabitResponse update(Long id, HabitRequest request) {
         try {
             Habit habit = habitRepository.findById(id)
@@ -70,6 +71,7 @@ public class HabitService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         getById(id); // проверяем существует ли привычка, иначе выбрасываем исключение
         habitRepository.deleteById(id); // удаляем из мапа
