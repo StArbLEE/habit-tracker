@@ -28,17 +28,17 @@ public class StatsService { // создаем класс статистики
     }
 
     @Transactional(readOnly = true)
-    public HabitDateResponse getDailyStats(){
-        List<HabitDailyListResponse> result = new ArrayList<>();
+    public HabitDateResponse getDateStats(){
+        List<HabitDateListResponse> result_list = new ArrayList<>();
         List<Habit> habits = habitRepository.findAll();
         for (Habit hb: habits){
             if (recordRepository.existsByHabitIdAndDate(hb.getId(), LocalDate.now())){
-                result.add(new HabitDailyListResponse(hb.getId(), hb.getName(), true));
+                result_list.add(new HabitDateListResponse(hb.getId(), hb.getName(), true));
             }else{
-                result.add(new HabitDailyListResponse(hb.getId(), hb.getName(), false));
+                result_list.add(new HabitDateListResponse(hb.getId(), hb.getName(), false));
             }
         }
-        return new HabitDateResponse(LocalDate.now(), result);
+        return new HabitDateResponse(LocalDate.now(), result_list);
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +59,23 @@ public class StatsService { // создаем класс статистики
         log.info("Получена статистика выполнения c id: {}", habitId);
 
         return new StatsResponse(currentStreak, bestStreak, completionRate, totalCompletions);
+    }
+
+    @Transactional(readOnly = true)
+    public HabitWeekResponse getWeekStats(){
+        List <HabitWeekListResponse> result_list = new ArrayList<>();
+        List<Habit> habits = habitRepository.findAll();
+        for (int i = 0; i<7; i++){
+            LocalDate day = LocalDate.now().minusDays(i);
+            int totalCounts = habits.size();
+            int completedCount = 0;
+            for (Habit hb : habits) {
+                if (recordRepository.existsByHabitIdAndDate(hb.getId(), day)) {
+                    completedCount++;
+                }
+            }
+            result_list.add(new HabitWeekListResponse(day, completedCount, totalCounts));
+        }return new HabitWeekResponse(result_list);
     }
 
     private int calculateCurrentStreak(List<Record> records) {
@@ -82,7 +99,6 @@ public class StatsService { // создаем класс статистики
         }
         return streak;
     }
-
     private int calculateBestStreak(List<Record> records) {
         if (records.isEmpty()) return 0;
 

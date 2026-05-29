@@ -5,13 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class HabitDateResponse {
+public class HabitWeekListResponse {
     private LocalDate date;
-    private List<HabitDateListResponse> habits;
+    private int completedCount;
+    private int totalCount;
 }

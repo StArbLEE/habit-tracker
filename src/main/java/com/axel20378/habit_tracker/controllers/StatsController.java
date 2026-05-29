@@ -1,6 +1,7 @@
 package com.axel20378.habit_tracker.controllers;
 
 import com.axel20378.habit_tracker.dto.HabitDateResponse;
+import com.axel20378.habit_tracker.dto.HabitWeekResponse;
 import com.axel20378.habit_tracker.dto.StatsResponse;
 import com.axel20378.habit_tracker.services.StatsService;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,13 @@ public class StatsController {
         return ResponseEntity.ok(stats);
     }
     @GetMapping("stats/daily")
-    public ResponseEntity<HabitDateResponse> getDailyStats(){
-        HabitDateResponse stats = statsService.getDailyStats();
+    public ResponseEntity<HabitDateResponse> getDateStats(){
+        HabitDateResponse stats = statsService.getDateStats();
+        return ResponseEntity.ok(stats);
+    }
+    @GetMapping("stats/week")
+    public ResponseEntity<HabitWeekResponse> getWeekStats(){
+        HabitWeekResponse stats = statsService.getWeekStats();
         return ResponseEntity.ok(stats);
     }
 

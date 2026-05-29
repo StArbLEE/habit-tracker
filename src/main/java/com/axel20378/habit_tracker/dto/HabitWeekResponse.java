@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HabitDailyListResponse {
-    private Long id;
-    private String name;
-    private boolean completed;
+public class HabitWeekResponse {
+    private List<HabitWeekListResponse> week;
 }
